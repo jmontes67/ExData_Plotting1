@@ -1,0 +1,21 @@
+raw_data <- read.csv("C:/Users/aname/ExData_Plotting1/household_power_consumption.txt", sep=";")
+data<-rbind(subset(raw_data, raw_data$Date=="1/2/2007"),subset(raw_data, raw_data$Date=="2/2/2007"))
+head(data)
+names<-colnames(data)
+data2<-cbind(strptime(paste(data$Date,data$Time),"%d/%m/%Y%H:%M:%S"),data)
+colnames(data2)<-c("Date_time",names)
+data2[,4:10]<-lapply(data2[,4:10],as.numeric)
+lapply(data2,class)
+
+
+
+par(mfrow=c(2,2),mar=c(5,5,5,5))
+with(data2,plot(Date_time,Global_active_power,type="l",ylab="Global Active Power (Kilowatts)",xlab=""))
+with(data2,plot(Date_time,Voltage,type="l",col="black",ylab="Voltage",xlab="datetime"))
+with(data2,plot(Date_time,Sub_metering_1,type="l",col="black",ylab="energy sub metering",xlab=""))
+with(data2,lines(Date_time,Sub_metering_2,type="l",col="red"))
+with(data2,lines(Date_time,Sub_metering_3,type="l",col="blue"))
+legend("topright",c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),col=c("black","red","blue"),lty=c("solid","solid","solid"),bty="n")
+with(data2,plot(Date_time,Global_reactive_power,type="l",ylab="Global_reactive_power",xlab="datetime"))
+dev.copy(png,file="plot4.png",width = 1000, height = 1000)
+dev.off()
